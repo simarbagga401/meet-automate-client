@@ -6,7 +6,8 @@
 				<h2><span>Automate</span> All Your Google Meetings With Ease!</h2>
 				<p>Schedule Details About Your Google Meeting And Forget About Them!</p>
 			</div>
-			<v-btn elevation="0" outlined x-large>Get Started!</v-btn>
+
+			<v-btn elevation="0" outlined x-large to="/home"> Get Started! </v-btn>
 		</div>
 	</section>
 </template>
@@ -59,10 +60,10 @@ section {
 	}
 }
 #container {
-	width: 90%;
+	width: 100%;
 	max-width: 500px;
 	max-height: 700px;
-	height: 90%;
+	height: 100%;
 	// background: rgb(175, 175, 175);
 	display: flex;
 	flex-direction: column;

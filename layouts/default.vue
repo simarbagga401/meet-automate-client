@@ -9,3 +9,10 @@ export default {
 	},
 };
 </script>
+
+<style lang="scss">
+a {
+	color: black;
+	text-decoration: none;
+}
+</style>
