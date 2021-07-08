@@ -1,14 +1,11 @@
 <template>
-	<v-app>
-		<Nuxt />
-	</v-app>
+	<v-app> <Nuxt /> </v-app>
 </template>
 
 <script>
 export default {
 	data() {
-		return {
-
+		return {};
 	},
 };
 </script>
