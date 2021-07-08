@@ -1,21 +1,27 @@
 <template>
 	<section>
 		<div id="container">
-			<v-alert color="red" prominent type="error" border="left">
-				Alert: Kindly Use <span>Dummy / Sample Gmail</span> With
-				<span>2FA Disabled</span> And <span>Enable Less Secure App</span> Option
-				in Settings
-			</v-alert>
-			<div class="form">
-				<div class="inputs"></div>
-				<div class="btns"></div>
+			<Illustration :width="illustration.width" :height="illustration.height" />
+			<div class="text">
+				<h2><span>Automate</span> All Your Google Meetings With Ease!</h2>
+				<p>Schedule Details About Your Google Meeting And Forget About Them!</p>
 			</div>
+			<v-btn elevation="0" outlined x-large>Get Started!</v-btn>
 		</div>
 	</section>
 </template>
 
 <script>
-export default {};
+export default {
+	data() {
+		return {
+			illustration: {
+				width: 350,
+				height: 200,
+			},
+		};
+	},
+};
 </script>
 
 <style scoped lang="scss">
@@ -24,48 +30,44 @@ section {
 	height: 100vh;
 	padding: 10px;
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: center;
 }
-#container {
-	width: 90%;
-	max-width: 500px;
-	height: 100%;
-	background: rgb(175, 175, 175);
+.text {
+	width: 100%;
+	height: 30%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-around;
-}
+	// background: rgb(255, 140, 140);
 
-.form {
-	width: 100%;
-	height: 80%;
-	border-radius: 10px;
-	border: 1px solid black;
+	p {
+		text-align: center;
+		// background: rgb(255, 128, 128);
+		width: 60%;
+	}
+	span {
+		color: #ec407a;
+		font-weight: 500;
+	}
+	h2 {
+		text-align: center;
+		font-weight: 400;
+		width: 60%;
+		// background: rgb(255, 117, 117);
+	}
+}
+#container {
+	width: 90%;
+	max-width: 500px;
+	max-height: 700px;
+	height: 90%;
+	// background: rgb(175, 175, 175);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-around;
 	padding: 10px;
-
-	.inputs {
-		width: 100%;
-		height: 80%;
-		background: rgb(97, 76, 76);
-	}
-	.btns {
-		width: 100%;
-		height: 20%;
-		background: rgb(61, 44, 44);
-		display: flex;
-		justify-content: center;
-		align-items: space-evenly;
-	}
-}
-
-span {
-	font-weight: bold;
-	font-size: 14px;
 }
 </style>
