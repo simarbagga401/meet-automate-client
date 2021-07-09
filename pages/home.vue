@@ -31,7 +31,80 @@
 					></v-text-field>
 				</div>
 
+				<!-- TIME PICKER START-->
 				<div v-show="visibleForm === 1" class="inputs">
+					<v-menu
+						ref="menu"
+						v-model="menu2"
+						:close-on-content-click="false"
+						:nudge-right="40"
+						:return-value.sync="meetInfo.time"
+						transition="scale-transition"
+						offset-y
+						max-width="290px"
+						min-width="290px"
+					>
+						<template v-slot:activator="{ on, attrs }">
+							<v-text-field
+								v-model="meetInfo.time"
+								label="Picker in menu"
+								prepend-icon="mdi-clock-time-four-outline"
+								readonly
+								v-bind="attrs"
+								v-on="on"
+							></v-text-field>
+						</template>
+						<v-time-picker
+							v-if="menu2"
+							v-model="meetInfo.time"
+							header-color="pink"
+							full-width
+							@click:minute="$refs.menu.save(meetInfo.time)"
+						></v-time-picker>
+					</v-menu>
+
+					<!-- TIME PICKER END-->
+					<!-- DATE PICKER START-->
+
+					<v-menu
+						ref="menu"
+						v-model="menu"
+						:close-on-content-click="false"
+						:return-value.sync="meetInfo.date"
+						transition="scale-transition"
+						offset-y
+						min-width="auto"
+					>
+						<template v-slot:activator="{ on, attrs }">
+							<v-text-field
+								v-model="meetInfo.date"
+								label="Picker in menu"
+								prepend-icon="mdi-calendar"
+								readonly
+								v-bind="attrs"
+								v-on="on"
+							></v-text-field>
+						</template>
+						<v-date-picker
+							v-model="meetInfo.date"
+							no-title
+							scrollable
+							color="pink"
+						>
+							<v-spacer></v-spacer>
+							<v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
+							<v-btn
+								text
+								color="primary"
+								@click="$refs.menu.save(meetInfo.date)"
+							>
+								OK
+							</v-btn>
+						</v-date-picker>
+					</v-menu>
+
+					<!-- DATE PICKER END-->
+
 					<v-text-field
 						v-model="meetInfo.exitTime.delay"
 						label="Meeting Leave Time Delay"
@@ -42,14 +115,6 @@
 				</div>
 
 				<div v-show="visibleForm === 2" class="inputs">
-					<v-text-field
-						v-model="meetInfo.enterTime"
-						label="Meeting Enter Time (optional)"
-						placeholder="Meeting Enter Time"
-						clearable
-						outlined
-					></v-text-field>
-
 					<v-text-field
 						v-model="meetInfo.exitTime.delay"
 						label="Meeting Leave Time Delay (optional)"
@@ -136,11 +201,15 @@ export default {
 	data() {
 		return {
 			visibleForm: 0,
+			menu: null,
+			menu2: null,
 			apiResponse: null,
 			meetInfo: {
 				gmail: '',
 				password: '',
 				meetId: '',
+				time: '',
+				date: '',
 				enterTime: '',
 				exitTime: {
 					delay: '',
