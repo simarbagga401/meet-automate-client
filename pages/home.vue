@@ -1,28 +1,8 @@
 <template>
 	<section>
 		<div id="container">
-			<v-alert
-				v-show="visibleForm === 0"
-				color="red"
-				prominent
-				type="error"
-				border="left"
-			>
-				Alert: Kindly Use <span>Dummy / Sample Gmail</span> With
-				<span>2FA Disabled</span> And <span>Enable Less Secure App</span> Option
-				in Settings
-			</v-alert>
-
-			<v-alert
-				v-show="visibleForm === 1 || visibleForm === 2"
-				color="orange"
-				prominent
-				type="warning"
-				border="left"
-			>
-				Alert: Kindly Add <span>UTC Date & Time </span> For Your Meeting Below
-				Instead Of Local Time.
-			</v-alert>
+			<RedAlert v-show="visibleForm === 0" />
+			<OrangeAlert v-show="visibleForm === 1 || visibleForm === 2" />
 
 			<div class="form">
 				<div v-show="visibleForm === 0" class="inputs">
@@ -52,14 +32,6 @@
 				</div>
 
 				<div v-show="visibleForm === 1" class="inputs">
-					<v-text-field
-						v-model="meetInfo.enterTime"
-						label="Meeting Enter Time"
-						placeholder="Meeting Enter Time"
-						clearable
-						outlined
-					></v-text-field>
-
 					<v-text-field
 						v-model="meetInfo.exitTime.delay"
 						label="Meeting Leave Time Delay"
@@ -207,12 +179,14 @@ export default {
 			switch (reqType) {
 				case 'create':
 					createHandler();
+					this.visibleForm = 1;
 					break;
 				case 'read':
 					readHandler();
 					break;
 				case 'update':
 					updateHandler();
+					this.visibleForm = 2;
 					break;
 				case 'delete':
 					deleteHandler();
