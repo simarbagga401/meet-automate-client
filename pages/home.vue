@@ -5,6 +5,12 @@
 			<OrangeAlert v-show="visibleForm === 1 || visibleForm === 2" />
 
 			<div class="form">
+				<BackBtn
+					v-show="visibleForm === 1 || visibleForm === 2"
+					class="back-btn"
+					@click.native="visibleForm = 0"
+				/>
+
 				<div v-show="visibleForm === 0" class="inputs">
 					<v-text-field
 						v-model="meetInfo.gmail"
@@ -44,7 +50,7 @@
 						max-width="290px"
 						min-width="290px"
 					>
-						<template v-slot:activator="{ on, attrs }">
+						<template #activator="{ on, attrs }">
 							<v-text-field
 								v-model="meetInfo.time"
 								label="Picker in menu"
@@ -75,7 +81,7 @@
 						offset-y
 						min-width="auto"
 					>
-						<template v-slot:activator="{ on, attrs }">
+						<template #activator="{ on, attrs }">
 							<v-text-field
 								v-model="meetInfo.date"
 								label="Picker in menu"
@@ -149,37 +155,19 @@
 						</div>
 					</template>
 
-					<v-btn
+					<BlockBtn
 						v-show="visibleForm === 1"
-						class="success"
-						elevation="0"
-						block
-						large
-					>
-						<img
-							src="../static/schedule.png"
-							alt=""
-							style="margin: 0 10px 2px 0"
-						/>
+						type="success"
+						title="Schedule Meeting"
+						image="schedule.png"
+					/>
 
-						Schedule Meeting</v-btn
-					>
-
-					<v-btn
+					<BlockBtn
 						v-show="visibleForm === 2"
-						class="warning"
-						elevation="0"
-						block
-						large
-					>
-						<img
-							src="../static/update.png"
-							alt=""
-							style="margin: 0 10px 2px 0"
-						/>
-
-						Update Meeting</v-btn
-					>
+						type="warning"
+						title="Update Meeting"
+						image="update.png"
+					/>
 				</div>
 			</div>
 		</div>
@@ -297,7 +285,7 @@ section {
 	border: 1px solid black;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: space-around;
 	padding: 10px;
 
