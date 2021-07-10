@@ -235,18 +235,18 @@ export default {
 		crud(reqType) {
 			switch (reqType) {
 				case 'create':
-					createHandler();
+					createHandler(this.$axios);
 					this.visibleForm = 1;
 					break;
 				case 'read':
-					readHandler();
+					readHandler(this.$axios);
 					break;
 				case 'update':
-					updateHandler();
+					updateHandler(this.$axios);
 					this.visibleForm = 2;
 					break;
 				case 'delete':
-					deleteHandler();
+					deleteHandler(this.$axios);
 					break;
 
 				default:
