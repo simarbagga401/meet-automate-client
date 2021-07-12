@@ -1,105 +1,71 @@
-async function readHandler(axios) {
-	const query = {
-		gmail: 'johndoesample9@gmail.com',
-		password: 'johndoe@123',
-		meetId: 'xjw-ubfb-omo',
-	};
-
+async function readHandler(axios, query) {
 	try {
 		const payload = await axios.get(
 			'https://meet-automate.herokuapp.com/meetings',
 			{ params: query }
 		);
-		console.log(payload);
+		return { type: 'success', payload };
 	} catch (err) {
 		if (err.response) {
-			console.log(err.response.data);
+			const errorResponse = { type: 'error', error: err.response.data };
+			return errorResponse;
 		} else {
-			console.log(err);
+			return { type: 'error', error: 'Unexpected Error Happened' };
 		}
 	}
 }
 
-async function createHandler(axios) {
-	const query = {
-		gmail: 'johndoesampl@gmail.com',
-		password: 'johndoe@123',
-		enterTime: {
-			hour: 13,
-			minute: 43,
-			day: 6,
-			month: 7,
-			year: 2021,
-		},
-		exitTime: {
-			delay: 30000,
-		},
-		phoneNumber: '34899959933',
-		message: 'good afternoon',
-		meetId: 'xjw-ubfb-omo',
-	};
-
+async function createHandler(axios, query) {
 	try {
 		const payload = await axios.post(
 			'https://meet-automate.herokuapp.com/meetings',
 			query
 		);
 
-		console.log(payload);
+		return { type: 'success', payload };
 	} catch (err) {
 		if (err.response) {
-			console.log(err.response.data);
+			return { type: 'error', error: err.response.data };
 		} else {
-			console.log('err', err);
+			return { type: 'error', error: 'Unexpected Error Happened' };
 		}
 	}
 }
 
-async function updateHandler(axios) {
-	const query = {
-		query: {
-			gmail: 'johndoesample9@gmail.com',
-			password: 'johndoe@123',
-			meetId: 'xjw-ubfb-omo',
-		},
-		data: {
-			inProgress: 'true',
-		},
-	};
-
+async function updateHandler(axios, query) {
 	try {
 		const payload = await axios.put(
 			'https://meet-automate.herokuapp.com/meetings',
 			query
 		);
 
-		console.log(payload);
+		return { type: 'success', payload };
 	} catch (err) {
 		if (err.response) {
-			console.log(err.response.data);
+			return { type: 'error', error: err.response.data };
 		} else {
-			console.log('err', err);
+			return { type: 'error', error: 'Unexpected Error Happened' };
 		}
 	}
 }
-async function deleteHandler(axios) {
-	const query = {
-		gmail: 'johndoesampl@gmail.com',
-		password: 'johndoe@123',
-		enterTime: {
-			hour: 13,
-			minute: 43,
-			day: 6,
-			month: 7,
-			year: 2021,
-		},
-		exitTime: {
-			delay: 30000,
-		},
-		phoneNumber: '34899959933',
-		message: 'good afternoon',
-		meetId: 'xjw-ubfb-omo',
-	};
+async function deleteHandler(axios, query) {
+	// const query = {
+	// 	gmail: 'johndoesample9@gmail.com',
+	// 	password: 'johndoe@123',
+	// 	enterTime: {
+	// 		hour: 13,
+	// 		minute: 43,
+	// 		day: 6,
+	// 		month: 7,
+	// 		year: 2021,
+	// 	},
+	// 	exitTime: {
+	// 		delay: 30000,
+	// 	},
+	// 	phoneNumber: '34899959933',
+	// 	message: 'good afternoon',
+	// 	meetId: 'xjw-ubfb-omo',
+	// };
 
 	try {
 		const payload = await axios.delete(
@@ -107,12 +73,12 @@ async function deleteHandler(axios) {
 			{ data: query }
 		);
 
-		console.log(payload);
+		return { type: 'success', payload };
 	} catch (err) {
 		if (err.response) {
-			console.log(err.response.data);
+			return { type: 'error', error: err.response.data };
 		} else {
-			console.log('err', err);
+			return { type: 'error', error: 'Unexpected Error Happened' };
 		}
 	}
 }

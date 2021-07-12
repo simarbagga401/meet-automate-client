@@ -2,6 +2,15 @@
 	<section>
 		<div id="container">
 			<RedAlert v-show="visibleForm === 0" />
+			<RedAlert
+				v-show="apiResponseStatus === 'error'"
+				:message="apiResponse"
+				:custom="true"
+			/>
+			<GreenAlert
+				v-show="apiResponseStatus === 'success'"
+				:message="apiResponse"
+			/>
 			<OrangeAlert v-show="visibleForm === 1 || visibleForm === 2" />
 
 			<div class="form">
@@ -160,6 +169,7 @@
 						type="success"
 						title="Schedule Meeting"
 						image="schedule.png"
+						@click.native="crud('create')"
 					/>
 
 					<BlockBtn
@@ -167,6 +177,7 @@
 						type="warning"
 						title="Update Meeting"
 						image="update.png"
+						@click.native="crud('update')"
 					/>
 				</div>
 			</div>
@@ -192,6 +203,7 @@ export default {
 			menu: null,
 			menu2: null,
 			apiResponse: null,
+			apiResponseStatus: null,
 			meetInfo: {
 				gmail: '',
 				password: '',
@@ -205,7 +217,7 @@ export default {
 			},
 			btns: [
 				{
-					type: 'create',
+					type: 'setVisibleFormTo1',
 					heading: 'Schedule Meeting',
 					color: 'success',
 					icon: 'schedule.png',
@@ -217,7 +229,7 @@ export default {
 					icon: 'delete_outline.png',
 				},
 				{
-					type: 'update',
+					type: 'setVisibleFormTo2',
 					heading: 'Update Meeting',
 					color: 'warning',
 					icon: 'update.png',
@@ -232,21 +244,100 @@ export default {
 		};
 	},
 	methods: {
-		crud(reqType) {
+		async crud(reqType) {
 			switch (reqType) {
-				case 'create':
-					createHandler(this.$axios);
+				case 'create': {
+					const query = {
+						gmail: this.meetInfo.gmail,
+						password: this.meetInfo.password,
+						enterTime: {
+							hour: 13,
+							minute: 43,
+							day: 6,
+							month: 7,
+							year: 2021,
+						},
+						exitTime: {
+							delay: parseInt(this.meetInfo.exitTime.delay) * 1000,
+						},
+						phoneNumber: '34899959933',
+						message: 'good afternoon',
+						meetId: this.meetInfo.meetId,
+					};
+					const response = await createHandler(this.$axios, query);
+					if (response.type === 'success') {
+						this.apiResponseStatus = 'success';
+						this.apiResponse = `Meeting ${response.payload.data.meetId} Scheduled Successfully`;
+					} else {
+						this.apiResponseStatus = 'error';
+						this.apiResponse = response.error;
+					}
+					break;
+				}
+				case 'read': {
+					const query = {
+						gmail: this.meetInfo.gmail,
+						password: this.meetInfo.password,
+						meetId: this.meetInfo.meetId,
+					};
+					const response = await readHandler(this.$axios, query);
+					if (response.type === 'success') {
+						this.apiResponseStatus = 'success';
+						this.apiResponse = response.payload.data.inProgress
+							? 'Meeting In Progress'
+							: 'Meeting Not In Progress';
+					} else {
+						this.apiResponseStatus = 'error';
+						this.apiResponse = response.error;
+					}
+					break;
+				}
+				case 'update': {
+					const query = {
+						query: {
+							gmail: this.meetInfo.gmail,
+							password: this.meetInfo.password,
+							meetId: this.meetInfo.meetId,
+						},
+						data: {
+							inProgress: this.meetInfo.delay,
+							password: this.meetInfo.password,
+						},
+					};
+					const response = await updateHandler(this.$axios, query);
+
+					if (response.type === 'success') {
+						this.apiResponseStatus = 'success';
+						this.apiResponse = `Meeting ${response.payload.data.meetId} Updated Successfully`;
+					} else {
+						this.apiResponseStatus = 'error';
+						this.apiResponse = response.error;
+					}
+					break;
+				}
+				case 'delete': {
+					const query = {
+						gmail: this.meetInfo.gmail,
+						password: this.meetInfo.password,
+						meetId: this.meetInfo.meetId,
+					};
+					const response = await deleteHandler(this.$axios, query);
+
+					if (response.type === 'success') {
+						this.apiResponseStatus = 'success';
+						this.apiResponse = `Meeting ${response.payload.data.meetId} Deleted Successfully`;
+					} else {
+						this.apiResponseStatus = 'error';
+						this.apiResponse = response.error;
+					}
+					break;
+				}
+				case 'setVisibleFormTo1':
 					this.visibleForm = 1;
 					break;
-				case 'read':
-					readHandler(this.$axios);
-					break;
-				case 'update':
-					updateHandler(this.$axios);
+
+				case 'setVisibleFormTo2':
 					this.visibleForm = 2;
-					break;
-				case 'delete':
-					deleteHandler(this.$axios);
 					break;
 
 				default:
