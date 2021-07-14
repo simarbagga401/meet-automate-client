@@ -13,6 +13,13 @@
 			/>
 			<OrangeAlert v-show="visibleForm === 1 || visibleForm === 2" />
 
+			<v-progress-circular
+				v-if="loading"
+				indeterminate
+				color="pink"
+				style="margin: 10px"
+			></v-progress-circular>
+
 			<div class="form">
 				<BackBtn
 					v-show="visibleForm === 1 || visibleForm === 2"
@@ -241,12 +248,21 @@ export default {
 					icon: 'chrome_reader_mode.png',
 				},
 			],
+			loading: false,
 		};
 	},
 	methods: {
 		async crud(reqType) {
 			switch (reqType) {
 				case 'create': {
+					for (const key in this.meetInfo) {
+						if (this.meetInfo[key] === '') {
+							this.apiResponseStatus = 'error';
+							this.apiResponse = 'Err: Params are undefined';
+							return;
+						}
+					}
+
 					const query = {
 						gmail: this.meetInfo.gmail,
 						password: this.meetInfo.password,
@@ -264,7 +280,9 @@ export default {
 						message: 'good afternoon',
 						meetId: this.meetInfo.meetId,
 					};
+					this.loading = true;
 					const response = await createHandler(this.$axios, query);
+					this.loading = false;
 					if (response.type === 'success') {
 						this.apiResponseStatus = 'success';
 						this.apiResponse = `Meeting ${response.payload.data.meetId} Scheduled Successfully`;
@@ -280,7 +298,9 @@ export default {
 						password: this.meetInfo.password,
 						meetId: this.meetInfo.meetId,
 					};
+					this.loading = true;
 					const response = await readHandler(this.$axios, query);
+					this.loading = false;
 					if (response.type === 'success') {
 						this.apiResponseStatus = 'success';
 						this.apiResponse = response.payload.data.inProgress
@@ -304,7 +324,9 @@ export default {
 							password: this.meetInfo.password,
 						},
 					};
+					this.loading = true;
 					const response = await updateHandler(this.$axios, query);
+					this.loading = false;
 
 					if (response.type === 'success') {
 						this.apiResponseStatus = 'success';
@@ -321,7 +343,9 @@ export default {
 						password: this.meetInfo.password,
 						meetId: this.meetInfo.meetId,
 					};
+					this.loading = true;
 					const response = await deleteHandler(this.$axios, query);
+					this.loading = false;
 
 					if (response.type === 'success') {
 						this.apiResponseStatus = 'success';
