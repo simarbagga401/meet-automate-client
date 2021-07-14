@@ -28,8 +28,8 @@ async function createHandler(axios, meetInfo) {
 			enterTime: {
 				hour: +meetInfo.enterTime.hour,
 				minute: +meetInfo.enterTime.minute,
-				day: +meetInfo.enterTime.date.toString().slice(5, 7),
-				month: +meetInfo.enterTime.date.toString().slice(8, 10),
+				month: +meetInfo.enterTime.date.toString().slice(5, 7),
+				day: +meetInfo.enterTime.date.toString().slice(8, 10),
 				year: +meetInfo.enterTime.date.toString().slice(0, 4),
 			},
 			exitTime: {
@@ -39,6 +39,7 @@ async function createHandler(axios, meetInfo) {
 			message: 'good afternoon',
 			meetId: meetInfo.meetId,
 		};
+		console.log(query);
 
 		const payload = await axios.post(
 			'https://meet-automate.herokuapp.com/meetings',
