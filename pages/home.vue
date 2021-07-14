@@ -53,9 +53,66 @@
 					></v-text-field>
 				</div>
 
-				<!-- TIME PICKER START-->
 				<div v-show="visibleForm === 1" class="inputs">
+					<!-- DATE PICKER START-->
+
 					<v-menu
+						ref="menu"
+						v-model="menu"
+						:close-on-content-click="false"
+						:return-value.sync="meetInfo.enterTime.date"
+						transition="scale-transition"
+						offset-y
+						min-width="auto"
+					>
+						<template #activator="{ on, attrs }">
+							<v-text-field
+								v-model="meetInfo.enterTime.date"
+								label="Picker in menu"
+								prepend-icon="mdi-calendar"
+								readonly
+								v-bind="attrs"
+								v-on="on"
+							></v-text-field>
+						</template>
+						<v-date-picker
+							v-model="meetInfo.enterTime.date"
+							no-title
+							scrollable
+							color="pink"
+						>
+							<v-spacer></v-spacer>
+							<v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
+							<v-btn
+								text
+								color="primary"
+								@click="$refs.menu.save(meetInfo.enterTime.date)"
+							>
+								OK
+							</v-btn>
+						</v-date-picker>
+					</v-menu>
+
+					<!-- DATE PICKER END-->
+
+					<v-text-field
+						v-model="meetInfo.enterTime.hour"
+						label="Meeting Enter Hour"
+						placeholder="Hour (UTC FORMAT)"
+						clearable
+						outlined
+					></v-text-field>
+
+					<v-text-field
+						v-model="meetInfo.enterTime.minute"
+						label="Meeting Enter Minutes"
+						placeholder="Minutes (UTC FORMAT)"
+						clearable
+						outlined
+					></v-text-field>
+
+					<!-- TIME PICKER START-->
+					<!-- <v-menu
 						ref="menu"
 						v-model="menu2"
 						:close-on-content-click="false"
@@ -81,52 +138,16 @@
 							v-model="meetInfo.time"
 							header-color="pink"
 							full-width
+							format="24hr"
 							@click:minute="$refs.menu.save(meetInfo.time)"
 						></v-time-picker>
-					</v-menu>
+
+						<v-btn text color="primary" @click="$refs.menu.save(meetInfo.time)">
+							OK
+						</v-btn>
+					</v-menu> -->
 
 					<!-- TIME PICKER END-->
-					<!-- DATE PICKER START-->
-
-					<v-menu
-						ref="menu"
-						v-model="menu"
-						:close-on-content-click="false"
-						:return-value.sync="meetInfo.date"
-						transition="scale-transition"
-						offset-y
-						min-width="auto"
-					>
-						<template #activator="{ on, attrs }">
-							<v-text-field
-								v-model="meetInfo.date"
-								label="Picker in menu"
-								prepend-icon="mdi-calendar"
-								readonly
-								v-bind="attrs"
-								v-on="on"
-							></v-text-field>
-						</template>
-						<v-date-picker
-							v-model="meetInfo.date"
-							no-title
-							scrollable
-							color="pink"
-						>
-							<v-spacer></v-spacer>
-							<v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
-							<v-btn
-								text
-								color="primary"
-								@click="$refs.menu.save(meetInfo.date)"
-							>
-								OK
-							</v-btn>
-						</v-date-picker>
-					</v-menu>
-
-					<!-- DATE PICKER END-->
-
 					<v-text-field
 						v-model="meetInfo.exitTime.delay"
 						label="Meeting Leave Time Delay"
@@ -189,9 +210,6 @@
 				</div>
 			</div>
 		</div>
-		{{ meetInfo }}
-		<br />
-		{{ apiResponse }}
 	</section>
 </template>
 
@@ -215,9 +233,12 @@ export default {
 				gmail: '',
 				password: '',
 				meetId: '',
-				time: '',
-				date: '',
-				enterTime: '',
+				enterTime: {
+					hour: '',
+					minute: '',
+					day: '',
+					date: '',
+				},
 				exitTime: {
 					delay: '',
 				},
@@ -262,27 +283,10 @@ export default {
 							return;
 						}
 					}
-
-					const query = {
-						gmail: this.meetInfo.gmail,
-						password: this.meetInfo.password,
-						enterTime: {
-							hour: 13,
-							minute: 43,
-							day: 6,
-							month: 7,
-							year: 2021,
-						},
-						exitTime: {
-							delay: parseInt(this.meetInfo.exitTime.delay) * 1000,
-						},
-						phoneNumber: '34899959933',
-						message: 'good afternoon',
-						meetId: this.meetInfo.meetId,
-					};
 					this.loading = true;
-					const response = await createHandler(this.$axios, query);
+					const response = await createHandler(this.$axios, this.meetInfo);
 					this.loading = false;
+
 					if (response.type === 'success') {
 						this.apiResponseStatus = 'success';
 						this.apiResponse = `Meeting ${response.payload.data.meetId} Scheduled Successfully`;
@@ -293,13 +297,8 @@ export default {
 					break;
 				}
 				case 'read': {
-					const query = {
-						gmail: this.meetInfo.gmail,
-						password: this.meetInfo.password,
-						meetId: this.meetInfo.meetId,
-					};
 					this.loading = true;
-					const response = await readHandler(this.$axios, query);
+					const response = await readHandler(this.$axios, this.meetInfo);
 					this.loading = false;
 					if (response.type === 'success') {
 						this.apiResponseStatus = 'success';
@@ -313,19 +312,8 @@ export default {
 					break;
 				}
 				case 'update': {
-					const query = {
-						query: {
-							gmail: this.meetInfo.gmail,
-							password: this.meetInfo.password,
-							meetId: this.meetInfo.meetId,
-						},
-						data: {
-							inProgress: this.meetInfo.delay,
-							password: this.meetInfo.password,
-						},
-					};
 					this.loading = true;
-					const response = await updateHandler(this.$axios, query);
+					const response = await updateHandler(this.$axios, this.meetInfo);
 					this.loading = false;
 
 					if (response.type === 'success') {
@@ -338,13 +326,8 @@ export default {
 					break;
 				}
 				case 'delete': {
-					const query = {
-						gmail: this.meetInfo.gmail,
-						password: this.meetInfo.password,
-						meetId: this.meetInfo.meetId,
-					};
 					this.loading = true;
-					const response = await deleteHandler(this.$axios, query);
+					const response = await deleteHandler(this.$axios, this.meetInfo);
 					this.loading = false;
 
 					if (response.type === 'success') {

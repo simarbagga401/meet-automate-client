@@ -1,5 +1,10 @@
-async function readHandler(axios, query) {
+async function readHandler(axios, meetInfo) {
 	try {
+		const query = {
+			gmail: meetInfo.gmail,
+			password: meetInfo.password,
+			meetId: meetInfo.meetId,
+		};
 		const payload = await axios.get(
 			'https://meet-automate.herokuapp.com/meetings',
 			{ params: query }
@@ -15,8 +20,26 @@ async function readHandler(axios, query) {
 	}
 }
 
-async function createHandler(axios, query) {
+async function createHandler(axios, meetInfo) {
 	try {
+		const query = {
+			gmail: meetInfo.gmail,
+			password: meetInfo.password,
+			enterTime: {
+				hour: +meetInfo.enterTime.hour,
+				minute: +meetInfo.enterTime.minute,
+				day: +meetInfo.enterTime.date.toString().slice(5, 7),
+				month: +meetInfo.enterTime.date.toString().slice(8, 10),
+				year: +meetInfo.enterTime.date.toString().slice(0, 4),
+			},
+			exitTime: {
+				delay: +meetInfo.exitTime.delay * 1000,
+			},
+			phoneNumber: '34899959933',
+			message: 'good afternoon',
+			meetId: meetInfo.meetId,
+		};
+
 		const payload = await axios.post(
 			'https://meet-automate.herokuapp.com/meetings',
 			query
@@ -32,8 +55,19 @@ async function createHandler(axios, query) {
 	}
 }
 
-async function updateHandler(axios, query) {
+async function updateHandler(axios, meetInfo) {
 	try {
+		const query = {
+			query: {
+				gmail: meetInfo.gmail,
+				password: meetInfo.password,
+				meetId: meetInfo.meetId,
+			},
+			data: {
+				inProgress: meetInfo.delay,
+				password: meetInfo.password,
+			},
+		};
 		const payload = await axios.put(
 			'https://meet-automate.herokuapp.com/meetings',
 			query
@@ -48,26 +82,14 @@ async function updateHandler(axios, query) {
 		}
 	}
 }
-async function deleteHandler(axios, query) {
-	// const query = {
-	// 	gmail: 'johndoesample9@gmail.com',
-	// 	password: 'johndoe@123',
-	// 	enterTime: {
-	// 		hour: 13,
-	// 		minute: 43,
-	// 		day: 6,
-	// 		month: 7,
-	// 		year: 2021,
-	// 	},
-	// 	exitTime: {
-	// 		delay: 30000,
-	// 	},
-	// 	phoneNumber: '34899959933',
-	// 	message: 'good afternoon',
-	// 	meetId: 'xjw-ubfb-omo',
-	// };
-
+async function deleteHandler(axios, meetInfo) {
 	try {
+		const query = {
+			gmail: meetInfo.gmail,
+			password: meetInfo.password,
+			meetId: meetInfo.meetId,
+		};
+
 		const payload = await axios.delete(
 			'https://meet-automate.herokuapp.com/meetings',
 			{ data: query }
