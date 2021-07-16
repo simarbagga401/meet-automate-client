@@ -33,7 +33,7 @@ async function createHandler(axios, meetInfo) {
 				year: +meetInfo.enterTime.date.toString().slice(0, 4),
 			},
 			exitTime: {
-				delay: +meetInfo.exitTime.delay * 1000,
+				delay: +meetInfo.exitTime.delay * 10000,
 			},
 			phoneNumber: '34899959933',
 			message: 'good afternoon',
